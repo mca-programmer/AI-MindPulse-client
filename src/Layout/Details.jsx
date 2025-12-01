@@ -1,47 +1,34 @@
 import React, { useContext, useState } from "react";
 import { AunthContext } from "../Auth/AuthProvider";
-import {
-  Navigate,
-  NavLink,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
+import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Loader from "../Component/Loader";
 
 const Details = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  const closeModal = () => setIsModalOpen(false);
-
   const { user } = useContext(AunthContext);
-  console.log(user);
   const details = useLoaderData();
   const navigation = useNavigate();
 
-  if (details == null) {
+  if (!details) {
     return <Navigate to="/" />;
   }
 
-  const userDetails = user.email === details.createdBy;
+  const userDetails = user?.email === details.createdBy;
 
-  // Function to delete data (Existing, unchanged)
-  function deleteData(id) {
-    // ... (existing deleteData logic)
+  // Delete function
+  const deleteData = (id) => {
     Swal.fire({
       title: "Are you sure you want to delete this item?",
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: "Delete",
-      denyButtonText: `Don't delete`,
+      denyButtonText: "Don't delete",
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(`https://ai-mind-pulse-server.vercel.app/models/${id}`, {
           method: "DELETE",
         })
-          .then((response) => response.json())
+          .then((res) => res.json())
           .then((data) => {
             if (data.message) {
               Swal.fire("Deleted!", "", "success");
@@ -50,24 +37,19 @@ const Details = () => {
               Swal.fire("Item not found", "", "error");
             }
           })
-          .catch((error) => {
-            Swal.fire("Error", "Something went wrong!", "error");
-          });
+          .catch(() => Swal.fire("Error", "Something went wrong!", "error"));
       } else if (result.isDenied) {
         Swal.fire("Item not deleted", "", "info");
       }
     });
-  }
+  };
 
+  // Purchase function
   const handlePurchase = async (id) => {
-    // ... (existing handlePurchase logic)
     try {
       const response = await fetch(
         `https://ai-mind-pulse-server.vercel.app/purchase?id=${id}&&email=${user?.email}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }
+        { method: "POST", headers: { "Content-Type": "application/json" } }
       );
       const data = await response.json();
 
@@ -77,14 +59,13 @@ const Details = () => {
       } else {
         Swal.fire("Already Purchased", "", "error");
       }
-    } catch (error) {
+    } catch {
       Swal.fire("Error", "Something went wrong!", "error");
     }
   };
 
   return (
     <section className="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white rounded-3xl shadow-2xl overflow-hidden my-10 max-w-7xl mx-auto p-6 md:p-10">
-      {/* ... (Existing Details display code) ... */}
       <div className="flex flex-col md:flex-row items-center md:items-stretch space-y-8 md:space-y-0">
         {/* Left: Image */}
         <div className="md:w-1/2 w-full p-6 flex items-center justify-center bg-gray-800/40 backdrop-blur-sm rounded-xl shadow-lg hover:scale-[1.05] transition-transform duration-300">
@@ -103,8 +84,7 @@ const Details = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-300">
             <p>
-              <span className="font-semibold">Framework:</span>{" "}
-              {details.framework}
+              <span className="font-semibold">Framework:</span> {details.framework}
             </p>
             <p>
               <span className="font-semibold">Use Case:</span> {details.useCase}
@@ -113,8 +93,14 @@ const Details = () => {
               <span className="font-semibold">Dataset:</span> {details.dataset}
             </p>
             <p>
-              <span className="font-semibold">Purchased:</span>{" "}
-              {details.purchased} times
+              <span className="font-semibold">Purchased:</span> {details.purchased} times
+            </p>
+            <p>
+              <span className="font-semibold">Created By:</span> {details.createdBy}
+            </p>
+            <p>
+              <span className="font-semibold">Created At:</span>{" "}
+              {new Date(details.createdAt).toLocaleDateString()}
             </p>
           </div>
 
@@ -131,14 +117,10 @@ const Details = () => {
               🛒 Purchase
             </button>
 
-            {/* --- START: Update Button Change (New onClick) --- */}
-
-            {/* --- END: Update Button Change --- */}
-
             {userDetails && (
               <div className="flex gap-5">
                 <button
-                  onClick={openModal}
+                  onClick={() => setIsModalOpen(true)}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-transform duration-300 hover:scale-105"
                 >
                   ✏️ Edit
@@ -154,11 +136,12 @@ const Details = () => {
           </div>
         </div>
       </div>
-      {/* --- START: Modal Rendering (New) --- */}
+
+      {/* Update Modal */}
       <UpdateModal
         details={details}
         isOpen={isModalOpen}
-        onClose={closeModal}
+        onClose={() => setIsModalOpen(false)}
       />
     </section>
   );
@@ -166,7 +149,6 @@ const Details = () => {
 
 const UpdateModal = ({ details, isOpen, onClose }) => {
   if (!isOpen) return null;
-  console.log(details);
 
   const [formData, setFormData] = useState({
     name: details.name,
@@ -175,54 +157,46 @@ const UpdateModal = ({ details, isOpen, onClose }) => {
     dataset: details.dataset,
     description: details.description,
     image: details.image,
+    createdBy: details.createdBy,
+    createdAt: details.createdAt,
+    purchased: details.purchased,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = e.target;
-    const name = form.name.value;
-    const framework = form.framework.value;
-    const useCase = form.useCase.value;
-    const dataset = form.dataset.value;
-    const image = form.image.value;
-    const description = form.description.value;
-
     const updatedData = {
-      name,
-      framework,
-      useCase,
-      dataset,
-      image,
-      description,
+      ...formData,
+      // Keep createdBy, createdAt, purchased unchanged in backend if required
     };
 
-    const response = await fetch(
-      `https://ai-mind-pulse-server.vercel.app/update/${details._id}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-      }
-    );
-    const data = await response.json();
-    console.log(data);
+    try {
+      const response = await fetch(
+        `https://ai-mind-pulse-server.vercel.app/update/${details._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
 
-    Swal.fire({
-      title: "Model Updated!",
-      icon: "success",
-      draggable: true,
-    });
+      Swal.fire({
+        title: "Model Updated!",
+        icon: "success",
+        draggable: true,
+      });
 
-    onClose();
+      onClose();
+    } catch {
+      Swal.fire("Error", "Failed to update model!", "error");
+    }
   };
 
   const inputStyle =
@@ -330,6 +304,50 @@ const UpdateModal = ({ details, isOpen, onClose }) => {
                 onChange={handleChange}
                 className={inputStyle + " resize-none"}
                 required
+              />
+            </div>
+
+            {/* Readonly fields */}
+            <div className={fieldsetStyles}>
+              <div>
+                <label className={labelStyle} htmlFor="createdBy">
+                  Created By
+                </label>
+                <input
+                  type="text"
+                  id="createdBy"
+                  name="createdBy"
+                  value={formData.createdBy}
+                  className={inputStyle + " bg-gray-600 cursor-not-allowed"}
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className={labelStyle} htmlFor="createdAt">
+                  Created At
+                </label>
+                <input
+                  type="text"
+                  id="createdAt"
+                  name="createdAt"
+                  value={new Date(formData.createdAt).toLocaleString()}
+                  className={inputStyle + " bg-gray-600 cursor-not-allowed"}
+                  readOnly
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className={labelStyle} htmlFor="purchased">
+                Purchased
+              </label>
+              <input
+                type="number"
+                id="purchased"
+                name="purchased"
+                value={formData.purchased}
+                className={inputStyle + " bg-gray-600 cursor-not-allowed"}
+                readOnly
               />
             </div>
 

@@ -26,7 +26,7 @@ const Footer = () => {
         <div>
           <h6 className="font-bold text-white mb-2">Navigate</h6>
           <ul className="space-y-1 text-gray-300 text-sm sm:text-base">
-            <li><NavLink to="/all-models" className="hover:text-cyan-400 transition-colors">All Models</NavLink></li>
+            <li><NavLink to="/models" className="hover:text-cyan-400 transition-colors">All Models</NavLink></li>
             <li><NavLink to="/add-model" className="hover:text-cyan-400 transition-colors">Add Model</NavLink></li>
             <li><NavLink to="/purchase" className="hover:text-cyan-400 transition-colors">My Purchases</NavLink></li>
             <li><NavLink to="/mymodals" className="hover:text-cyan-400 transition-colors">My Model</NavLink></li>
