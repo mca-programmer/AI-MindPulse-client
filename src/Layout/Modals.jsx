@@ -5,62 +5,43 @@ import { useLocation } from "react-router";
 import Loader from "../Component/Loader";
 
 const Modals = () => {
-  const name = useContext(AunthContext);
-  console.log(name);
+  const { setDetails } = useContext(AunthContext);
   const location = useLocation();
-  console.log(location);
 
   const [aiS, setAi] = useState([]);
   const [filteredAi, setFilteredAi] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [isloading, setloading] = useState(false);
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const [isloading, setLoading] = useState(false);
 
-  let uniqueNamesArray = [
-    
-    ...new Set(filteredAi.map((item) => item.framework)),
-  ];
-  uniqueNamesArray = ["All", ...uniqueNamesArray];
-
-  console.log(uniqueNamesArray);
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   useEffect(() => {
-    setloading(true);
+    setLoading(true);
     fetch("https://ai-mind-pulse-server.vercel.app/allmodals")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setAi(data);
         setFilteredAi(data);
-        setloading(false);
+        setLoading(false);
       });
   }, []);
 
-  function filtering(framework) {
-    if (framework == "All") {
-      uniqueNamesArray = ["All", ...uniqueNamesArray];
-      fetch("https://ai-mind-pulse-server.vercel.app/allmodals")
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAi(data);
-          setFilteredAi(data);
-        });
-    } else {
-      uniqueNamesArray = ["All", ...uniqueNamesArray];
-      fetch(`https://ai-mind-pulse-server.vercel.app/find/${framework}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAi(data);
-          setFilteredAi(data);
-        });
-    }
-  }
+  // Get unique framework names
+  let uniqueNamesArray = ["All", ...new Set(filteredAi.map((item) => item.framework))];
 
+  // Filter by framework
+  const filtering = (framework) => {
+    if (framework === "All") {
+      setFilteredAi(aiS);
+    } else {
+      const filtered = aiS.filter((item) => item.framework === framework);
+      setFilteredAi(filtered);
+    }
+    setSearchQuery(""); // clear search when selecting filter
+  };
+
+  // Search handler
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -74,83 +55,82 @@ const Modals = () => {
     }
   };
 
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredAi(aiS);
+  };
+
   return (
-    <div className="max-w-[1300px] mx-auto">
-      <div className="flex justify-between items-center">
+    <div className="max-w-[1300px] mx-auto px-4 py-6">
+      {/* Top bar: Dropdown + Search */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        {/* Dropdown */}
         <div className="relative inline-block">
-          {/* Button */}
           <button
             onClick={toggleDropdown}
-            className="btn text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg px-6 py-3 transition-transform transform hover:scale-105 shadow-lg"
+            className="btn text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg px-6 py-3 shadow-lg hover:scale-105 transition-transform"
           >
-            Button
+            Filter
           </button>
 
-          {/* Dropdown Menu */}
           {isOpen && (
-            <ul
-              className="dropdown menu w-52 rounded-xl bg-white shadow-lg mt-2 absolute z-10 transition-all duration-300 transform scale-95 opacity-0 hover:scale-100 hover:opacity-100"
-              style={{ transformOrigin: "top center", opacity: isOpen ? 1 : 0 }}
-            >
-              {uniqueNamesArray?.map((arr) => (
+            <ul className="absolute mt-2 w-52 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
+              {uniqueNamesArray.map((name) => (
                 <li
-                  className="hover:bg-purple-100"
-                  onClick={() => filtering(arr)}
+                  key={name}
+                  className="hover:bg-purple-100 cursor-pointer"
+                  onClick={() => filtering(name)}
                 >
-                  <a href="#" className="px-4 py-2 text-sm text-gray-800">
-                    {arr}
-                  </a>
+                  <span className="block px-4 py-2 text-sm text-gray-800">{name}</span>
                 </li>
               ))}
-              {/* <li className="hover:bg-purple-100">
-            <a href="#" className="px-4 py-2 text-sm text-gray-800">Item 2</a>
-          </li> */}
             </ul>
           )}
         </div>
 
-        {/* search functionality */}
-        <label className="relative w-full max-w-[400px]">
-          <svg
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 text-gray-400 transition-all duration-300 ease-in-out group-focus:scale-110 group-focus:text-purple-500"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-
+        {/* Search */}
+        <div className="relative w-full max-w-[400px]">
           <input
-            type="search"
+            type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            required
-            placeholder="Search"
-            className="w-full py-3 pl-12 pr-4 rounded-full bg-gray-100 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 focus:border-transparent group hover:bg-purple-100 transition-all duration-300 ease-in-out transform hover:scale-105"
+            placeholder="Search models..."
+            className="w-full py-3 pl-4 pr-10 rounded-full bg-gray-100 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all"
           />
-        </label>
-      </div>
-
-      {isloading ? (
-        <Loader></Loader>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-[1300px] mx-auto">
-          {filteredAi.length > 0 ? (
-            filteredAi.map((ai) => <Cards key={ai._id} ai={ai} />)
+          {/* Icon: search or X */}
+          {searchQuery ? (
+            <button
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-500 transition-colors"
+            >
+              &#x2715; {/* X icon */}
+            </button>
           ) : (
-            <p className="text-center text-xl text-gray-500 col-span-4">
-              No models found.
-            </p>
+            <svg
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8" strokeWidth="2" />
+              <path d="M21 21l-4.3-4.3" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           )}
         </div>
+      </div>
+
+      {/* Cards Grid */}
+      {isloading ? (
+        <Loader />
+      ) : filteredAi.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {filteredAi.map((ai) => (
+            <Cards key={ai._id} ai={ai} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-xl text-gray-500">No models found.</p>
       )}
     </div>
   );

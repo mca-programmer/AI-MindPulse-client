@@ -10,7 +10,7 @@ const Card = ({ purchase }) => {
     }
   return (
     <div
-      className="relative w-[220px] h-[300px] bg-black flex flex-col justify-between p-4 gap-4 rounded-lg cursor-pointer text-white overflow-hidden shadow-lg"
+      className="relative w-100% h-[300px] bg-black flex flex-col justify-between p-4 gap-4 rounded-lg cursor-pointer text-white overflow-hidden shadow-lg"
       style={{
         backgroundImage: `url(${purchase.image})`,
         backgroundSize: 'cover',
