@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AunthContext } from "../Auth/AuthProvider";
 import useTheme from "../hooks/UseTheme";
+import AiLogo from '../assets/ai logo.png'; // logo import
+
 export default function Navbar() {
   const { user, handleSignOut } = useContext(AunthContext);
   const [open, setOpen] = React.useState(false);
@@ -52,7 +54,7 @@ export default function Navbar() {
             <span className="inline-flex items-center gap-2">
               {/* AI Logo Image */}
               <img
-                src="/src/assets/ai logo.png" // <-- এখানে নিজের ফাইলের path দাও
+                src={AiLogo} // logo import
                 alt="AI Logo"
                 className="w-8 h-8 object-contain"
               />

@@ -20,7 +20,7 @@ const Modals = () => {
   };
 
   let uniqueNamesArray = [
-    ,
+    
     ...new Set(filteredAi.map((item) => item.framework)),
   ];
   uniqueNamesArray = ["All", ...uniqueNamesArray];

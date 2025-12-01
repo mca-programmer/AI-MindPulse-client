@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import AiLogo from '../assets/ai logo.png';
 
 const Loader = () => {
   return (
     <StyledOverlay>
       <StyledWrapper>
         <img
-          src="/src/assets/ai logo.png" // logo use
+          src={AiLogo} // logo import
           alt="AI Logo"
           className="logo"
         />
