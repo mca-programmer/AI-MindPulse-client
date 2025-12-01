@@ -1,14 +1,31 @@
-# AI-MindPulse Client 🚀
+# 🧠 AI MindPulse – Modern AI Content Generator
+## React.js + Vite + Express.js + MongoDB
 
-A modern, responsive **AI model inventory web app** built with **React + Vite**.  
-Browse, manage, and purchase AI models effortlessly with a clean, interactive UI.
+## AI MindPulse is a modern AI-powered content generator built with React.js (Vite) on the frontend and Express.js + MongoDB on the backend.
+Users can generate various AI-based content, such as blogs, captions, product descriptions, emails, and custom prompts with a clean, responsive, and user-friendly interface.
 ---
 [![ai-mindmosel.png](https://i.postimg.cc/2yHCgHK4/ai-mindmosel.png)](https://postimg.cc/YLWcWxk9)
 ---
 
-## 🌐 Live Demo
-[Try it live here!](https://friendly-manatee-1cb052.netlify.app/)
+## 🚀 Live Demo
+🔹 Frontend
 
+👉 https://ai-mindpulse.web.app/
+
+🔹 Backend API
+
+👉 https://ai-mind-pulse-server.vercel.app/
+
+(If available)
+
+📦 GitHub Repositories
+🖥 Frontend
+
+👉 https://github.com/mca-programmer/AI-MindPulse-client
+
+🗄 Backend
+
+### 👉 https://github.com/mca-programmer/AI-MindPulse-server
 ---
 
 ## 🛠 Tech Stack
@@ -37,3 +54,4 @@ Browse, manage, and purchase AI models effortlessly with a clean, interactive UI
 1. Clone the repo:  
 ```bash
 git clone https://github.com/mca-programmer/AI-MindPulse-client.git
+
