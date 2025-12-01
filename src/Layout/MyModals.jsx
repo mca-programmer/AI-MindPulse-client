@@ -9,7 +9,7 @@ const MyModals = () => {
   console.log(user.email);
   useEffect(() => {
     setloading(true);
-    fetch(`http://localhost:5000/model/${user.email}`)
+    fetch(`https://ai-mind-pulse-server.vercel.app/model/${user.email}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

@@ -38,7 +38,7 @@ const Details = () => {
       denyButtonText: `Don't delete`,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/models/${id}`, {
+        fetch(`https://ai-mind-pulse-server.vercel.app/models/${id}`, {
           method: "DELETE",
         })
           .then((response) => response.json())
@@ -63,7 +63,7 @@ const Details = () => {
     // ... (existing handlePurchase logic)
     try {
       const response = await fetch(
-        `http://localhost:5000/purchase?id=${id}&&email=${user?.email}`,
+        `https://ai-mind-pulse-server.vercel.app/purchase?id=${id}&&email=${user?.email}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -206,7 +206,7 @@ const UpdateModal = ({ details, isOpen, onClose }) => {
     };
 
     const response = await fetch(
-      `http://localhost:5000/update/${details._id}`,
+      `https://ai-mind-pulse-server.vercel.app/update/${details._id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

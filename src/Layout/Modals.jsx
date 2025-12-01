@@ -29,7 +29,7 @@ const Modals = () => {
 
   useEffect(() => {
     setloading(true);
-    fetch("http://localhost:5000/allmodals")
+    fetch("https://ai-mind-pulse-server.vercel.app/allmodals")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -42,7 +42,7 @@ const Modals = () => {
   function filtering(framework) {
     if (framework == "All") {
       uniqueNamesArray = ["All", ...uniqueNamesArray];
-      fetch("http://localhost:5000/allmodals")
+      fetch("https://ai-mind-pulse-server.vercel.app/allmodals")
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -51,7 +51,7 @@ const Modals = () => {
         });
     } else {
       uniqueNamesArray = ["All", ...uniqueNamesArray];
-      fetch(`http://localhost:5000/find/${framework}`)
+      fetch(`https://ai-mind-pulse-server.vercel.app/find/${framework}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

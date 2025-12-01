@@ -10,7 +10,7 @@ const MyPurchase = () => {
 
   useEffect(() => {
     setloading(true);
-    fetch(`http://localhost:5000/userpurchase/${user.email}`)
+    fetch(`https://ai-mind-pulse-server.vercel.app/userpurchase/${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setPurchase(data);

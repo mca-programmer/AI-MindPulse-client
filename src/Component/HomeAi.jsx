@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Cards from "./Cards";
 import Loader from "./Loader";
@@ -9,7 +8,7 @@ const HomeAi = () => {
 
   useEffect(() => {
     setloading(true);
-    fetch("http://localhost:5000/allai")
+    fetch("https://ai-mind-pulse-server.vercel.app/allai")
       .then((res) => res.json())
       .then((data) => {
         setAi(data);

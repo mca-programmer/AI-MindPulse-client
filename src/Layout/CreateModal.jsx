@@ -32,7 +32,7 @@ const CreateModal = () => {
       image,
     };
 
-    fetch("http://localhost:5000/mymodal", {
+    fetch("https://ai-mind-pulse-server.vercel.app/mymodal", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -89,7 +89,7 @@ const router = createBrowserRouter([
         path: "/details/:id",
         loader: async ({ params }) => {
           const response = await fetch(
-            `http://localhost:5000/models/${params.id}`
+            `https://ai-mind-pulse-server.vercel.app/models/${params.id}`
           );
           if (!response.ok) throw new Error("Error fetching data");
           return response.json();
