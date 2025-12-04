@@ -5,7 +5,6 @@
 ---
 [![ai-mindmosel.png](https://i.postimg.cc/2yHCgHK4/ai-mindmosel.png)](https://postimg.cc/YLWcWxk9)
 ---
-
 ## 🚀 Live Demo
 🔹 Frontend
 
@@ -53,5 +52,6 @@
 1. Clone the repo:  
 ```bash
 git clone https://github.com/mca-programmer/AI-MindPulse-client.git
+
 
 
